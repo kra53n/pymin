@@ -25,7 +25,7 @@ def check_file(path):
 
 def find_files(cwd=CWD):
     """
-    Return full path to files in cwd where
+    Return full path to files as list in cwd where
     was run script
     """
     # TODO: don`t forget replace cwd
