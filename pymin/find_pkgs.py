@@ -1,6 +1,4 @@
-from os import getcwd
-from os import walk
-from os import path
+from os import getcwd, walk, path
 
 
 CWD = getcwd()
