@@ -23,13 +23,11 @@ def check_file(path):
         if line == "#!/bin/python":
             return 1
 
-def find_files(cwd=CWD):
+def find_files(cwd):
     """
     Return full path to files as list in cwd where
     was run script
     """
-    # TODO: don`t forget replace cwd
-    cwd = "/home/kra53n/Рабочий стол/tetris"
     paths = []
     for address, dirs, files in walk(cwd):
         if files != 0:
@@ -39,6 +37,27 @@ def find_files(cwd=CWD):
                     paths.append(pth)
     return paths
 
+def find_pkgs_in_file(path):
+    pkgs = []
+    with open(path) as f:
+        lines = f.readlines()
+    for line in lines:
+        if START_STRING[0] in line:
+            words = line.rstrip().split()
+            # sometimes you can find `from` in documentations
+            # and etc. For solve this probem script check
+            # in what order does it stand
+            # NOTE: but it is not full solving of problem
+            # and once it can be fixed
+            if START_STRING[0] == words[0]:
+                pkgs.append(words[1])
+        if START_STRING[1] in line[:7]:
+            pkgs.append(line.rstrip()[7:])
+    return pkgs
 
-if __name__ == "__main__":
-    [print(path) for path in find_files()]
+def find_pkgs(cwd=CWD):
+    pkgs = []
+    paths = find_files(cwd)
+    for path in paths:
+        pkgs.extend(find_pkgs_in_file(path))
+    return list(set(pkgs))
