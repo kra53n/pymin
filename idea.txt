@@ -1,4 +1,0 @@
-Make analizer of pkgs
-Analize local pkgs
-Analize built-in pkgs
-Analize outside pkgs
