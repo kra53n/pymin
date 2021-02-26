@@ -28,6 +28,7 @@ def find_files(cwd):
     Return full path to files as list in cwd where
     was run script
     """
+    # TODO: USE HERE find_files_full_information
     paths = []
     for address, dirs, files in walk(cwd):
         if files != 0:
@@ -36,6 +37,21 @@ def find_files(cwd):
                 if check_file(pth):
                     paths.append(pth)
     return paths
+
+def find_files_full_information(cwd):
+    """
+    Return address, dirs and files
+    """
+    data = {
+        "address": [],
+        "dirs": [],
+        "files": [],
+    }
+    for address, dirs, files in walk(cwd):
+        data["address"].append(address)
+        data["dirs"].append(dirs)
+        data["files"].append(files)
+    return data
 
 def find_pkgs_in_file(path):
     pkgs = []
