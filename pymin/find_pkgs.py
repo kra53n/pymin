@@ -23,35 +23,22 @@ def check_file(path):
         if line == "#!/bin/python":
             return 1
 
-def find_files(cwd):
+def find_files(cwd=CWD):
     """
     Return full path to files as list in cwd where
     was run script
     """
     # TODO: USE HERE find_files_full_information
     paths = []
+    py_files = []
     for address, dirs, files in walk(cwd):
         if files != 0:
             for fl in files:
                 pth = path.join(address, fl)
                 if check_file(pth):
                     paths.append(pth)
-    return paths
-
-def find_files_full_information(cwd):
-    """
-    Return address, dirs and files
-    """
-    data = {
-        "address": [],
-        "dirs": [],
-        "files": [],
-    }
-    for address, dirs, files in walk(cwd):
-        data["address"].append(address)
-        data["dirs"].append(dirs)
-        data["files"].append(files)
-    return data
+                    py_files.append(fl)
+    return paths, py_files
 
 def find_pkgs_in_file(path):
     pkgs = []
@@ -73,7 +60,12 @@ def find_pkgs_in_file(path):
 
 def find_pkgs(cwd=CWD):
     pkgs = []
-    paths = find_files(cwd)
+    paths = find_files(cwd)[0]
     for path in paths:
         pkgs.extend(find_pkgs_in_file(path))
     return list(set(pkgs))
+
+
+if __name__ == "__main__":
+    [print(i) for i in find_pkgs()]
+    [print(i) for i in find_files()[1]]
