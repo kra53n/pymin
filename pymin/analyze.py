@@ -10,6 +10,7 @@ from find_pkgs import find_files
 from find_pkgs import find_pkgs
 
 from sys import path as path_to_builtin
+from os import listdir
 
 
 # NOTE:
@@ -36,17 +37,24 @@ def parse_builtin():
     # /usr/lib/pythonX.X
     # if you have difference please give me feedback
     path = path_to_builtin[2]
-    ffs = find_files(path)
-    files = ffs[1]
-    dirs = ffs[2]
-    del ffs
+    files = [f for f in listdir(path)]
 
     slice_in_files_extension(files)
-    pkgs = files + dirs
-    del files, dirs
-    print(pkgs)
+    #print([print(i) for i in files])
     # what names it must skip
-    skip = ()
+    skip = ("pydoc_data", "config", "Tools")
+    pkgs = []
+    rm = []
+    [pkgs.append(i) for i in files if "_" not in i[:1]]
+    for i in skip:
+        for j in pkgs:
+            if i in j:
+                rm.append(i)
+    for i in pkgs:
+        for j in skip:
+            if j in i:
+                pkgs.remove(i)
+    return pkgs
     
 
 def analyze_pkgs(pkgs, files):
@@ -56,7 +64,7 @@ def analyze_pkgs(pkgs, files):
     pkgs - list of pkgs
     files - list of files that situated in cwd
     """
-    builtin = []
+    builtin = parse_builtin()
     local = []
     outside = []
 
