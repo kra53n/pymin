@@ -36,13 +36,10 @@ def analyze_pkgs(pkgs, files):
     local = []
     outside = []
 
-    # check local files
+    # Try to find local pkgs
     slice_in_files_extension(files)
-    for fl in files:
-        if fl in pkgs:
-            local.append(fl)
-            files.remove(fl)
-    print(files, local)
+    [local.append(fl) for fl in files if fl in pkgs]
+    [files.remove(pkg) for pkg in local]
 
 
 if __name__ == "__main__":
