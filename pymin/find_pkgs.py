@@ -1,3 +1,4 @@
+# TODO: change `cwd` on `path`
 from os import getcwd, walk, path
 
 
@@ -38,7 +39,7 @@ def find_files(cwd=CWD):
                 if check_file(pth):
                     paths.append(pth)
                     py_files.append(fl)
-    return paths, py_files
+    return paths, py_files, dirs
 
 def find_pkgs_in_file(path):
     pkgs = []

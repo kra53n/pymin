@@ -9,6 +9,8 @@ Three type of packages:
 from find_pkgs import find_files
 from find_pkgs import find_pkgs
 
+from sys import path as path_to_builtin
+
 
 # NOTE:
 # maybe some people don`t like this system of call
@@ -24,6 +26,28 @@ def slice_in_files_extension(files, extension=".py"):
     for i in range(len(files)):
         if files[i][-l:] == extension:
             files[i] = files[i][:-l]
+
+def parse_builtin():
+    """
+    Parse built in modules in Python
+    """
+    # NOTE:
+    # it must be smt like this
+    # /usr/lib/pythonX.X
+    # if you have difference please give me feedback
+    path = path_to_builtin[2]
+    ffs = find_files(path)
+    files = ffs[1]
+    dirs = ffs[2]
+    del ffs
+
+    slice_in_files_extension(files)
+    pkgs = files + dirs
+    del files, dirs
+    print(pkgs)
+    # what names it must skip
+    skip = ()
+    
 
 def analyze_pkgs(pkgs, files):
     """
@@ -43,4 +67,5 @@ def analyze_pkgs(pkgs, files):
 
 
 if __name__ == "__main__":
-    analyze_pkgs(find_pkgs(), find_files()[1])
+    #analyze_pkgs(find_pkgs(), find_files()[1])
+    parse_builtin()
