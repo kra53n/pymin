@@ -55,6 +55,14 @@ def parse_builtin():
             if j in i:
                 pkgs.remove(i)
     return pkgs
+
+# TODO: check working of this
+#def parse_local(pkgs, files):
+#    local = []
+#    slice_in_files_extension(files)
+#    [local.append(fl) for fl in files if fl in pkgs]
+#    [files.remove(pkg) for pkg in local]
+#    return local
     
 
 def analyze_pkgs(pkgs, files):
@@ -75,5 +83,5 @@ def analyze_pkgs(pkgs, files):
 
 
 if __name__ == "__main__":
-    #analyze_pkgs(find_pkgs(), find_files()[1])
-    parse_builtin()
+    #parse_builtin()
+    analyze_pkgs(find_pkgs(), find_files())
