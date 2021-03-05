@@ -13,6 +13,6 @@ def print_pkgs(pkgs=find_pkgs()):
     message += "Outside:\n"
     for i in pkgs["outside"]:
         message += "  " + i + "\n"
-    print(message)
+    print(message[:-1])
 
 print_pkgs()
