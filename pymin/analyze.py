@@ -20,6 +20,9 @@ NAME_OUTSIDE = "outside"
 
 
 def slice_in_files_extension(files, extension=".py"):
+    """
+
+    """
     l = len(extension)
     for i in range(len(files)):
         if files[i][-l:] == extension:
@@ -93,3 +96,4 @@ def analyze_pkgs(pkgs, files):
 
 if __name__ == "__main__":
     analyze_pkgs(find_pkgs(), find_files()[1])
+    # slice_in_files_extension()

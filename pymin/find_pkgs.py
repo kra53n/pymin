@@ -1,4 +1,3 @@
-# TODO: change `PATH` on `path`
 from os import getcwd, walk, path
 
 
