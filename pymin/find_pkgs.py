@@ -1,8 +1,8 @@
-# TODO: change `cwd` on `path`
+# TODO: change `PATH` on `path`
 from os import getcwd, walk, path
 
 
-CWD = getcwd()
+PATH = getcwd()
 START_STRING = (
     "from",
     "import"
@@ -24,15 +24,15 @@ def check_file(path):
         if line == "#!/bin/python":
             return 1
 
-def find_files(cwd=CWD):
+def find_files(PATH=PATH):
     """
-    Return full path to files as list in cwd where
+    Return full path to files as list in PATH where
     was run script
     """
     # TODO: USE HERE find_files_full_information
     paths = []
     py_files = []
-    for address, dirs, files in walk(cwd):
+    for address, dirs, files in walk(PATH):
         if files != 0:
             for fl in files:
                 pth = path.join(address, fl)
@@ -59,9 +59,9 @@ def find_pkgs_in_file(path):
             pkgs.append(line.rstrip()[7:])
     return pkgs
 
-def find_pkgs(cwd=CWD):
+def find_pkgs(PATH=PATH):
     pkgs = []
-    paths = find_files(cwd)[0]
+    paths = find_files(PATH)[0]
     for path in paths:
         pkgs.extend(find_pkgs_in_file(path))
     return list(set(pkgs))
