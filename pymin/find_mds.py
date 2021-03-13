@@ -70,12 +70,21 @@ def check_file(path, file):
             if (long_comment == False) and (py_string in line):
                 return 1
 
+def get_py_files(path):
+    """
+    Argument:
+        path - path to directory
+    Return list of paths with Python files
+    """
+    py_path_to_files = []
+    data = dir_jogging(path)
+    path_files, files = data[0], data[1]
+    for i in range(len(data[0])):
+        if check_file(path_files[i], files[i]):
+            py_path_to_files.append(path_files[i])
+    return py_path_to_files
 
 if __name__ == "__main__":
     from os import getcwd
     path = getcwd()
-    data = dir_jogging(path)
-    # [print(data[0][i], "\t"*3, data[1][i]) for i in range(len(data[0]))]
-    path_file, file = data[0][4], data[1][4]
-    print(path_file, file)
-    print(check_file(path_file, file))
+    [print(i) for i in get_py_files(path)]
