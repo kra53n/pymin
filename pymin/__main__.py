@@ -1,9 +1,9 @@
-from __init__ import find_pkgs
+from __init__ import find_mds
 
 # TODO:
 # remake architecture
 
-def print_pkgs(pkgs=find_pkgs()):
+def print_pkgs(pkgs=find_mds()):
     message = "Builtin:\n"
     for i in pkgs["builtin"]:
         message += "  " + i + "\n"
