@@ -9,7 +9,7 @@ from os import path as os_path
 IGNORE_DIRS = [".git"]
 
 
-def dir_jogging(path):
+def dir_jogging(path, ingore_dirs=IGNORE_DIRS):
     """
     Argument path is path to directory.
     Function return:
@@ -21,7 +21,7 @@ def dir_jogging(path):
     for root, dirs, files in walk(path):
         # skip directory with names in IGNORE_DIRS
         cont = False
-        for name in IGNORE_DIRS:
+        for name in ingore_dirs:
             if name in root:
                 cont = True
         if cont:
@@ -46,8 +46,7 @@ def find_string_in_file(path, find):
     with open(path) as f:
         lines = f.readlines()
 
-    # TODO: change name of ls
-    ls = [path]
+    suits = []
     for line in lines:
         # avoid comments
         if "//" in line:
@@ -67,10 +66,10 @@ def find_string_in_file(path, find):
             elif not long_comment:
                 long_comment = True
         if (long_comment == False) and (find in line):
-            ls.append(line.replace("\n", ""))
-    return ls
+            suits.append(line.replace("\n", ""))
+    return suits
 
-def check_file(path, file):
+def check_file(path, file, find_without_ext=True):
     """
     Check it is Python file or not
     Arguments:
@@ -79,9 +78,10 @@ def check_file(path, file):
     """
     if file[-3:] == ".py":
         return 1
-    if "." not in file:
-        if find_string_in_file(path, "#!/bin/python"):
-            return 1
+    if find_without_ext == True:
+        if "." not in file:
+            if find_string_in_file(path, "#!/bin/python"):
+                return 1
 
 def get_py_files(path):
     """
@@ -97,19 +97,40 @@ def get_py_files(path):
             py_path_to_files.append(path_files[i])
     return py_path_to_files
 
+def matrix_to_list(matrix):
+    """
+    From [[21, 12], [3, 4], [9,0]] function
+    return [21, 12, 3, 4, 9, 0]
+    """
+    lst = []
+    for i in matrix:
+        lst.extend(i)
+    return lst
+
+def deal_with_from_in_string(string):
+    string = string[5:]
+    first_space_index = 0
+    for i in range(len(string)):
+        if string[i] == " ":
+            first_space_index = i
+            break
+    string = string[:first_space_index]
+    return string
+
+def remove_unnecessary_items(strings):
+    for i in range(len(strings)):
+        # remove spaces at the begining of string
+        strings[i] = strings[i].lstrip()
+        if "from" in strings[i]:
+            strings[i] = deal_with_from_in_string(strings[i])
+    return strings
+
 def find_mds(path):
     """
     Argument path - path to directory
     """
     paths = get_py_files(path)
     strings = [find_string_in_file(p, "import") for p in paths]
-    return strings
-
-if __name__ == "__main__":
-    from os import getcwd
-    # path = getcwd()
-    path = "/home/kra53n/Рабочий стол/getgit"
-    # [print(i) for i in get_py_files(path)]
-    md = find_mds(path)
-    md = [i for i in md]
-    [print(i) for i in md]
+    strings = matrix_to_list(strings)
+    strings = remove_unnecessary_items(strings)
+    return list(set(strings))

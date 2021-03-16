@@ -1,13 +1,9 @@
-def slice_in_files_extension(files, extension=".py"):
-    l = len(extension)
-    for i in range(len(files)):
-        if files[i][-l:] == extension:
-            files[i] = files[i][:-l]
+from sys import path as path_to_builtin
+from os import listdir
 
-local = []
-pkgs = ["june", "april", "may"]
-files = ["mart", "may", "april"]
+from find_mds import dir_jogging
 
-[local.append(fl) for fl in files if fl in pkgs]
-[files.remove(pkg) for pkg in local]
-print(files, local)
+
+
+if __name__ == "__main__":
+    pass

@@ -9,6 +9,8 @@ Three type of packages:
 from sys import path as path_to_builtin
 from os import listdir
 
+from .find_mds import check_file
+
 
 # NOTE:
 # maybe some people don`t like this system of call
@@ -36,6 +38,7 @@ def parse_builtin_from_python_libs():
     # it must be smt like this
     # /usr/lib/pythonX.X
     # if you have difference please give me feedback
+    # TODO: find it
     path = path_to_builtin[2]
     files = [f for f in listdir(path)]
 
