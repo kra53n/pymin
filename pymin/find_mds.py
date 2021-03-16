@@ -133,9 +133,3 @@ def find_mds(path):
     strings = matrix_to_list(strings)
     strings = remove_unnecessary_items(strings)
     return list(set(strings))
-
-if __name__ == "__main__":
-    from os import getcwd
-    path = "/home/kra53n/Рабочий стол/getgit"
-    md = find_mds(path)
-    [print(i) for i in md]
