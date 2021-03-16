@@ -46,7 +46,8 @@ def find_string_in_file(path, find):
     with open(path) as f:
         lines = f.readlines()
 
-    suits = []
+    # TODO: change name of ls
+    ls = [path]
     for line in lines:
         # avoid comments
         if "//" in line:
@@ -66,8 +67,8 @@ def find_string_in_file(path, find):
             elif not long_comment:
                 long_comment = True
         if (long_comment == False) and (find in line):
-            suits.append(line.replace("\n", ""))
-    return suits
+            ls.append(line.replace("\n", ""))
+    return ls
 
 def check_file(path, file):
     """
