@@ -65,7 +65,7 @@ def find_string_in_file(path, find):
             if not long_comment:
                 long_comment = True
         if (long_comment == False) and (find in line):
-            return line
+            return line.replace("\n", "")
 
 def check_file(path, file):
     """
