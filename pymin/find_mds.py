@@ -96,19 +96,27 @@ def get_py_files(path):
             py_path_to_files.append(path_files[i])
     return py_path_to_files
 
+def matrix_to_list(matrix):
+    """
+    From [[21, 12], [3, 4], [9,0]] function
+    return [21, 12, 3, 4, 9, 0]
+    """
+    lst = []
+    for i in matrix:
+        lst.extend(i)
+    return lst
+
 def find_mds(path):
     """
     Argument path - path to directory
     """
     paths = get_py_files(path)
     strings = [find_string_in_file(p, "import") for p in paths]
+    strings = matrix_to_list(strings)
     return strings
 
 if __name__ == "__main__":
     from os import getcwd
-    # path = getcwd()
     path = "/home/kra53n/Рабочий стол/getgit"
-    # [print(i) for i in get_py_files(path)]
     md = find_mds(path)
-    md = [i for i in md]
     [print(i) for i in md]
