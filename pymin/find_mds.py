@@ -46,6 +46,8 @@ def find_string_in_file(path, find):
     with open(path) as f:
         lines = f.readlines()
 
+    # TODO: change name of ls
+    ls =[]
     for line in lines:
         # avoid comments
         if "//" in line:
@@ -65,7 +67,8 @@ def find_string_in_file(path, find):
             if not long_comment:
                 long_comment = True
         if (long_comment == False) and (find in line):
-            return line.replace("\n", "")
+            ls.append(line.replace("\n", ""))
+    return ls
 
 def check_file(path, file):
     """
@@ -108,4 +111,5 @@ if __name__ == "__main__":
     path = "/home/kra53n/Рабочий стол/getgit"
     # [print(i) for i in get_py_files(path)]
     md = find_mds(path)
-    [print(i) for i in find_mds(path)]
+    md = [i for i in md]
+    [print(i) for i in md]
