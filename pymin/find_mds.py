@@ -106,6 +106,24 @@ def matrix_to_list(matrix):
         lst.extend(i)
     return lst
 
+def deal_with_from_in_string(string):
+    string = string[5:]
+    first_space_index = 0
+    for i in range(len(string)):
+        if string[i] == " ":
+            first_space_index = i
+            break
+    string = string[:first_space_index]
+    return string
+
+def remove_unnecessary_items(strings):
+    for i in range(len(strings)):
+        # remove spaces at the begining of string
+        strings[i] = strings[i].lstrip()
+        if "from" in strings[i]:
+            strings[i] = deal_with_from_in_string(strings[i])
+    return strings
+
 def find_mds(path):
     """
     Argument path - path to directory
@@ -113,7 +131,8 @@ def find_mds(path):
     paths = get_py_files(path)
     strings = [find_string_in_file(p, "import") for p in paths]
     strings = matrix_to_list(strings)
-    return strings
+    strings = remove_unnecessary_items(strings)
+    return list(set(strings))
 
 if __name__ == "__main__":
     from os import getcwd
