@@ -11,10 +11,6 @@ from sys import version as sys_version
 from os import listdir
 
 
-# NOTE:
-# maybe some people don`t like this system of call
-# so they can easily change it
-# if you know how call them let me know about it
 NAME_BUILTIN = "builtin"
 NAME_LOCAL = "local"
 NAME_OUTSIDE = "outside"
@@ -51,11 +47,6 @@ def parse_builtin_from_python_libs():
     """
     Parse built in modules in Python
     """
-    # NOTE:
-    # it must be smt like this
-    # /usr/lib/pythonX.X
-    # if you have difference please give me feedback
-    # TODO: find it
     path = path_to_builtin()
     files = [f for f in listdir(path)]
 
