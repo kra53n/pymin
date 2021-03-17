@@ -1,8 +1,7 @@
-from find_mds import find_files
-from find_mds import find_mds as fp
+from find_mds import find_mds
+from find_mds import dir_jogging
+from analyze import analyze_mds
 
-from analyze import analyze_pkgs
 
-
-def find_mds():
-    return analyze_pkgs(fp(), find_files()[1])
+def return_mds(path):
+    return analyze_mds(find_mds(path), dir_jogging(path)[1])

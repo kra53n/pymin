@@ -75,6 +75,7 @@ def check_file(path, file, find_without_ext=True):
     Arguments:
         path - path to file with name of file
         file - name of file
+        find_without_ext - find Python files without extension or not
     """
     if file[-3:] == ".py":
         return 1
