@@ -6,7 +6,8 @@ Three type of packages:
     - outside
 """
 
-from sys import path as path_to_builtin
+from sys import path as sys_path
+from sys import version as sys_version
 from os import listdir
 
 
@@ -20,13 +21,31 @@ NAME_OUTSIDE = "outside"
 
 
 def slice_in_files_extension(files, extension=".py"):
-    """
-
-    """
     l = len(extension)
     for i in range(len(files)):
         if files[i][-l:] == extension:
             files[i] = files[i][:-l]
+
+def py_version(ver=sys_version):
+    """
+    From sys_version it slice to 2 digits.
+    Return result as string
+    """
+    index = 0
+    for i in range(len(ver)):
+        if "." in ver[i]:
+            index += 1
+        if index == 2:
+            index = i
+            break
+    return ver[:index]
+
+def path_to_builtin(lst=sys_path):
+    """
+    From list in sys_path it parse path to Python
+    where situated his Libs
+    """
+    return [i for i in sys_path if i[9:len(i)-len(py_version())] == "python"][0]
 
 def parse_builtin_from_python_libs():
     """
@@ -36,7 +55,8 @@ def parse_builtin_from_python_libs():
     # it must be smt like this
     # /usr/lib/pythonX.X
     # if you have difference please give me feedback
-    path = path_to_builtin[2]
+    # TODO: find it
+    path = path_to_builtin()
     files = [f for f in listdir(path)]
 
     slice_in_files_extension(files)
@@ -54,7 +74,7 @@ def parse_builtin_from_python_libs():
                 pkgs.remove(i)
     return pkgs
 
-def parse_builtin(pkgs):
+def check_builtin(pkgs):
     """
     Find builtin modules in project.
     Check pkgs with builtin Python modules
@@ -81,19 +101,23 @@ def parse_outside(pkgs, builtin, local):
             outside.append(pkg)
     return outside
 
-def analyze_pkgs(pkgs, files):
+def analyze_mds(mds, files):
     """
     Return dictionary with names of package`s type
     ===================ARGUMENTS==================
-    pkgs - list of pkgs
+    mds - list of mds
     files - list of files that situated in cwd
     """
-    builtin = parse_builtin(pkgs)
-    local = parse_local(pkgs, files)
-    outside = parse_outside(pkgs, local, builtin)
+    builtin = check_builtin(mds)
+    local = parse_local(mds, files)
+    outside = parse_outside(mds, local, builtin)
     return {NAME_BUILTIN: builtin, NAME_LOCAL: local, NAME_OUTSIDE: outside}
 
 
 if __name__ == "__main__":
-    analyze_pkgs(find_pkgs(), find_files()[1])
+    # print(parse_builtin_from_python_libs())
+    from find_mds import find_mds
+    from find_mds import dir_jogging
+    from os import getcwd
+    print(analyze_mds(find_mds(getcwd()), dir_jogging(getcwd())[1]))
     # slice_in_files_extension()

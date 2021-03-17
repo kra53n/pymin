@@ -1,18 +1,19 @@
-from __init__ import find_pkgs
+from __init__ import return_mds
+from os import getcwd
 
-# TODO:
-# remake architecture
 
-def print_pkgs(pkgs=find_pkgs()):
-    message = "Builtin:\n"
-    for i in pkgs["builtin"]:
-        message += "  " + i + "\n"
-    message += "Local:\n"
-    for i in pkgs["local"]:
-        message += "  " + i + "\n"
-    message += "Outside:\n"
-    for i in pkgs["outside"]:
-        message += "  " + i + "\n"
-    print(message[:-1])
+def print_mds(path):
+    mds = return_mds(path)
+    keys = mds.keys()
+    message = ""
+    for key in keys:
+        message += "\n" + key.upper() + "\n"
+        for i in range(len(mds[key])):
+            message += "\t" + mds[key][i]
+            if i != len(mds[key])-1:
+                message += "\n"
+    print(message[1:])
 
-print_pkgs()
+
+if __name__ == "__main__":
+    print_mds(getcwd())
