@@ -7,9 +7,10 @@ from os import path as os_path
 
 
 IGNORE_DIRS = [".git"]
+IGNORE_FILES = ["LICENSE"]
 
 
-def dir_jogging(path, ingore_dirs=IGNORE_DIRS):
+def dir_jogging(path, ignore_dirs=IGNORE_DIRS, ignore_files=IGNORE_FILES):
     """
     Argument path is path to directory.
     Function return:
@@ -21,7 +22,7 @@ def dir_jogging(path, ingore_dirs=IGNORE_DIRS):
     for root, dirs, files in walk(path):
         # skip directory with names in IGNORE_DIRS
         cont = False
-        for name in ingore_dirs:
+        for name in ignore_dirs:
             if name in root:
                 cont = True
         if cont:
@@ -29,6 +30,8 @@ def dir_jogging(path, ingore_dirs=IGNORE_DIRS):
             
         if files != 0:
             for file in files:
+                if file in ignore_files:
+                    continue
                 pth.append(os_path.join(root, file))
                 file_names.append(file)
     return pth, file_names
