@@ -103,12 +103,3 @@ def analyze_mds(mds, files):
     local = parse_local(mds, files)
     outside = parse_outside(mds, local, builtin)
     return {NAME_BUILTIN: builtin, NAME_LOCAL: local, NAME_OUTSIDE: outside}
-
-
-if __name__ == "__main__":
-    # print(parse_builtin_from_python_libs())
-    from find_mds import find_mds
-    from find_mds import dir_jogging
-    from os import getcwd
-    print(analyze_mds(find_mds(getcwd()), dir_jogging(getcwd())[1]))
-    # slice_in_files_extension()
