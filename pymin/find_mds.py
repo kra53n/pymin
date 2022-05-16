@@ -2,6 +2,8 @@
 find_mds - find modules
 """
 
+import itertools
+
 from os import walk
 from os import path as os_path
 
