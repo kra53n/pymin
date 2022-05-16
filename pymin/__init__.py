@@ -1,5 +1,4 @@
-from find_mds import find_mds
-from find_mds import dir_jogging
+from find_mds import find_mds, dir_jogging
 from analyze import analyze_mds
 
 
