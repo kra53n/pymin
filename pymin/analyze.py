@@ -76,13 +76,15 @@ def check_builtin(pkgs):
 def parse_local(pkgs, files):
     local = []
     # clean pkgs
-    for i in range(len(pkgs)):
-        if "." in pkgs[i]:
-            pkgs[i] = pkgs[i].replace(".", "")
+    pkgs = [pkg.replace(".", "") if "." in pkg else pkg for pkg in pkgs]
 
     slice_in_files_extension(files)
-    [local.append(fl) for fl in files if fl in pkgs]
-    [files.remove(pkg) for pkg in local]
+    for fl in files:
+        if fl in pkgs:
+            local.appen(fl)
+    for pkg in local:
+        files.remove(pkg)
+
     return local
 
 def parse_outside(pkgs, builtin, local):
