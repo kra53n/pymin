@@ -96,20 +96,10 @@ def get_py_files(path):
     py_path_to_files = []
     data = dir_jogging(path)
     path_files, files = data[0], data[1]
-    for i in range(len(data[0])):
-        if check_file(path_files[i], files[i]):
-            py_path_to_files.append(path_files[i])
+    for idx, path_file in enumerate(path_files):
+        if check_file(path_file, files[idx]):
+            py_path_to_files.append(path_file)
     return py_path_to_files
-
-def matrix_to_list(matrix):
-    """
-    From [[21, 12], [3, 4], [9,0]] function
-    return [21, 12, 3, 4, 9, 0]
-    """
-    lst = []
-    for i in matrix:
-        lst.extend(i)
-    return lst
 
 def deal_with_from_in_string(string):
     string = string[5:]
@@ -135,6 +125,6 @@ def find_mds(path):
     """
     paths = get_py_files(path)
     strings = [find_string_in_file(p, "import") for p in paths]
-    strings = matrix_to_list(strings)
+    strings = list(itertools.chain.from_iterable(strings))
     strings = remove_unnecessary_items(strings)
     return list(set(strings))
