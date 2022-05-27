@@ -2,8 +2,7 @@
 find_mds - find modules
 """
 
-import itertools
-
+from itertools import chain
 from os import walk
 from os import path as os_path
 
@@ -84,7 +83,7 @@ def check_file(path, file, find_without_ext=True):
     """
     if file[-3:] == ".py":
         return 1
-    if find_without_ext == True:
+    if find_without_ext:
         if "." not in file:
             if find_string_in_file(path, "#!/bin/python"):
                 return 1
@@ -106,19 +105,18 @@ def get_py_files(path):
 def deal_with_from_in_string(string):
     string = string[5:]
     first_space_index = 0
-    for i in range(len(string)):
-        if string[i] == " ":
-            first_space_index = i
+    for idx, val in enumerate(string):
+        if val == ' ':
+            first_space_index = idx
             break
     string = string[:first_space_index]
     return string
 
 def remove_unnecessary_items(strings):
-    for i in range(len(strings)):
-        # remove spaces at the begining of string
-        strings[i] = strings[i].lstrip()
-        if "from" in strings[i]:
-            strings[i] = deal_with_from_in_string(strings[i])
+    for idx, val in enumerate(strings):
+        strings[idx] = val.lstrip()
+        if 'from' in val:
+            strings[idx] = deal_with_from_in_string(val)
     return strings
 
 def find_mds(path):
@@ -127,6 +125,6 @@ def find_mds(path):
     """
     paths = get_py_files(path)
     strings = [find_string_in_file(p, "import") for p in paths]
-    strings = list(itertools.chain.from_iterable(strings))
+    strings = list(chain.from_iterable(strings))
     strings = remove_unnecessary_items(strings)
     return list(set(strings))

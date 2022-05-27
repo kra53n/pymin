@@ -4,16 +4,14 @@ from os import getcwd
 
 def print_mds(path):
     mds = return_mds(path)
-    keys = mds.keys()
     message = ""
-    for key in keys:
-        message += "\n" + key.upper() + "\n"
-        for i in range(len(mds[key])):
-            message += "\t" + mds[key][i]
-            if i != len(mds[key])-1:
-                message += "\n"
+    for moudule_type, values in mds.items():
+        message += "\n" + moudule_type.upper() + "\n"
+        for value in values:
+            message += "\t" + value + "\n"
     print(message[1:])
 
 
 if __name__ == "__main__":
-    print_mds(getcwd())
+    path = '../pytouch/pytouch'
+    print_mds(path)

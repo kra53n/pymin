@@ -6,6 +6,7 @@ Three type of packages:
     - outside
 """
 
+from itertools import product
 from sys import path as sys_path
 from sys import version as sys_version
 from os import listdir
@@ -27,42 +28,42 @@ def py_version(ver=sys_version):
     From sys_version it slice to 2 digits.
     Return result as string
     """
-    index = 0
-    for i in range(len(ver)):
-        if "." in ver[i]:
-            index += 1
-        if index == 2:
-            index = i
-            break
-    return ver[:index]
+    return ver[:ver.find(' ')]
 
 def path_to_builtin(lst=sys_path):
     """
     From list in sys_path it parse path to Python
     where situated his Libs
     """
-    return [i for i in sys_path if i[9:len(i)-len(py_version())] == "python"][0]
+    res = [i[9:] for i in sys_path if i[9:len(i)-len(py_version())] == 'python']
+    return res[0] if res else res
 
 def parse_builtin_from_python_libs():
     """
     Parse built in modules in Python
     """
     path = path_to_builtin()
+    if not path:
+        return path
     files = [f for f in listdir(path)]
 
     slice_in_files_extension(files)
     skip = ("pydoc_data", "config", "Tools")
     pkgs = []
     rm = []
-    [pkgs.append(i) for i in files if "_" not in i[:1]]
-    for i in skip:
-        for j in pkgs:
-            if i in j:
-                rm.append(i)
-    for i in pkgs:
-        for j in skip:
-            if j in i:
-                pkgs.remove(i)
+
+    for i in files:
+        if '_' not in i[:1]:
+            pkgs.append(i)
+
+    for i, j in product(skip, pkgs):
+        if i == j:
+            rm.append(i)
+
+    for i, j in product(pkgs, skip):
+        if j in i:
+            pkgs.remove(i)
+
     return pkgs
 
 def check_builtin(pkgs):
@@ -70,8 +71,7 @@ def check_builtin(pkgs):
     Find builtin modules in project.
     Check pkgs with builtin Python modules
     """
-    builtin_py = parse_builtin_from_python_libs()
-    return [i for i in pkgs if i in builtin_py]
+    return [i for i in pkgs if i in parse_builtin_from_python_libs()]
 
 def parse_local(pkgs, files):
     local = []
@@ -79,20 +79,14 @@ def parse_local(pkgs, files):
     pkgs = [pkg.replace(".", "") if "." in pkg else pkg for pkg in pkgs]
 
     slice_in_files_extension(files)
-    for fl in files:
-        if fl in pkgs:
-            local.appen(fl)
+    local.extend([file for file in files if file in pkgs])
     for pkg in local:
         files.remove(pkg)
 
     return local
 
 def parse_outside(pkgs, builtin, local):
-    outside = []
-    for pkg in pkgs:
-        if (pkg not in builtin) and (pkg not in local):
-            outside.append(pkg)
-    return outside
+    return [pkg for pkg in pkgs if all(map(lambda x: pkg not in x, (builtin, local)))]
 
 def analyze_mds(mds, files):
     """
