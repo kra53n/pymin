@@ -11,17 +11,15 @@ from sys import path as sys_path
 from sys import version as sys_version
 from os import listdir
 
-
-NAME_BUILTIN = "builtin"
-NAME_LOCAL = "local"
-NAME_OUTSIDE = "outside"
+from constants import NAME_BUILTIN, NAME_LOCAL, NAME_OUTSIDE
 
 
 def slice_in_files_extension(files, extension=".py"):
-    l = len(extension)
+    ext_len = len(extension)
     for i in range(len(files)):
-        if files[i][-l:] == extension:
-            files[i] = files[i][:-l]
+        if files[i][-ext_len:] == extension:
+            files[i] = files[i][:-ext_len]
+
 
 def py_version(ver=sys_version):
     """
@@ -30,6 +28,7 @@ def py_version(ver=sys_version):
     """
     return ver[:ver.find(' ')]
 
+
 def path_to_builtin(lst=sys_path):
     """
     From list in sys_path it parse path to Python
@@ -37,6 +36,7 @@ def path_to_builtin(lst=sys_path):
     """
     res = [i[9:] for i in sys_path if i[9:len(i)-len(py_version())] == 'python']
     return res[0] if res else res
+
 
 def parse_builtin_from_python_libs():
     """
@@ -52,13 +52,8 @@ def parse_builtin_from_python_libs():
     pkgs = []
     rm = []
 
-    for i in files:
-        if '_' not in i[:1]:
-            pkgs.append(i)
-
-    for i, j in product(skip, pkgs):
-        if i == j:
-            rm.append(i)
+    pkgs += [i for i in files if "_" not in i[:1]]
+    rm += [i for i, j in product(skip, pkgs) if i == j]
 
     for i, j in product(pkgs, skip):
         if j in i:
@@ -66,12 +61,14 @@ def parse_builtin_from_python_libs():
 
     return pkgs
 
+
 def check_builtin(pkgs):
     """
     Find builtin modules in project.
     Check pkgs with builtin Python modules
     """
     return [i for i in pkgs if i in parse_builtin_from_python_libs()]
+
 
 def parse_local(pkgs, files):
     local = []
@@ -82,11 +79,12 @@ def parse_local(pkgs, files):
     local.extend([file for file in files if file in pkgs])
     for pkg in local:
         files.remove(pkg)
-
     return local
+
 
 def parse_outside(pkgs, builtin, local):
     return [pkg for pkg in pkgs if all(map(lambda x: pkg not in x, (builtin, local)))]
+
 
 def analyze_mds(mds, files):
     """

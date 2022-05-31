@@ -1,14 +1,9 @@
-"""
-find_mds - find modules
-"""
-
 from itertools import chain
+from pathlib import Path
 from os import walk
 from os import path as os_path
 
-
-IGNORE_DIRS = [".git"]
-IGNORE_FILES = ["LICENSE"]
+from constants import IGNORE_DIRS, IGNORE_FILES
 
 
 def dir_jogging(path, ignore_dirs=IGNORE_DIRS, ignore_files=IGNORE_FILES):
@@ -22,11 +17,10 @@ def dir_jogging(path, ignore_dirs=IGNORE_DIRS, ignore_files=IGNORE_FILES):
     file_names = []
     for root, dirs, files in walk(path):
         # skip directory with names in IGNORE_DIRS
-        cont = False
         for name in ignore_dirs:
-            if name in root:
-                cont = True
-        if cont:
+            if name not in root:
+                break
+        else:
             continue
             
         if files != 0:
@@ -36,6 +30,7 @@ def dir_jogging(path, ignore_dirs=IGNORE_DIRS, ignore_files=IGNORE_FILES):
                 pth.append(os_path.join(root, file))
                 file_names.append(file)
     return pth, file_names
+
 
 def find_string_in_file(path, find):
     """
@@ -69,11 +64,12 @@ def find_string_in_file(path, find):
                 long_comment = False
             elif not long_comment:
                 long_comment = True
-        if (long_comment == False) and (find in line):
+        if not long_comment and find in line:
             suits.append(line.replace("\n", ""))
     return suits
 
-def check_file(path, file, find_without_ext=True):
+
+def check_file(path: str, file: str, find_without_ext: bool = True):
     """
     Check it is Python file or not
     Arguments:
@@ -84,9 +80,9 @@ def check_file(path, file, find_without_ext=True):
     if file[-3:] == ".py":
         return 1
     if find_without_ext:
-        if "." not in file:
-            if find_string_in_file(path, "#!/bin/python"):
-                return 1
+        if "." not in file and find_string_in_file((path, "#!/bin/python")):
+            return 1
+
 
 def get_py_files(path):
     """
@@ -94,23 +90,16 @@ def get_py_files(path):
         path - path to directory
     Return list of paths with Python files
     """
-    py_path_to_files = []
-    data = dir_jogging(path)
-    path_files, files = data[0], data[1]
-    for idx, path_file in enumerate(path_files):
-        if check_file(path_file, files[idx]):
-            py_path_to_files.append(path_file)
-    return py_path_to_files
+    path_files, files = dir_jogging(path)
+    py_paths = [path_file for idx, path_file in enumerate(path_files) if check_file(path_file, files[idx])]
+    return py_paths
+
 
 def deal_with_from_in_string(string):
-    string = string[5:]
-    first_space_index = 0
-    for idx, val in enumerate(string):
-        if val == ' ':
-            first_space_index = idx
-            break
-    string = string[:first_space_index]
+    string = string[len("from "):]
+    string = string[:string.index(" ")]
     return string
+
 
 def remove_unnecessary_items(strings):
     for idx, val in enumerate(strings):
@@ -118,6 +107,7 @@ def remove_unnecessary_items(strings):
         if 'from' in val:
             strings[idx] = deal_with_from_in_string(val)
     return strings
+
 
 def find_mds(path):
     """
