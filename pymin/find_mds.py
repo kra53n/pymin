@@ -1,5 +1,4 @@
 from itertools import chain
-from pathlib import Path
 from os import walk
 from os import path as os_path
 
@@ -22,7 +21,7 @@ def dir_jogging(path, ignore_dirs=IGNORE_DIRS, ignore_files=IGNORE_FILES):
                 break
         else:
             continue
-            
+
         if files != 0:
             for file in files:
                 if file in ignore_files:
@@ -34,37 +33,34 @@ def dir_jogging(path, ignore_dirs=IGNORE_DIRS, ignore_files=IGNORE_FILES):
 
 def find_string_in_file(path, find):
     """
+    Return line that have `find` substring
+
     Arguments:
         0) path - path to file
-        1) find - string that will be searched.
-        Searching avoid various comments
-    Return line that have `find` value
+        1) find - string that help find strings with find substring.
     """
     # help avoid long comments
-    long_comment = False
     with open(path) as f:
-        lines = f.readlines()
+        lines = [ls for line in f.readlines() if (ls := line.lstrip()) != '']
 
+    # avoid comments
     suits = []
+    long_comment = False
     for line in lines:
-        # avoid comments
-        if "//" in line:
+        if any(map(lambda x: x == 1, (line.count("'''"), line.count('"""')))):
+            long_comment = False if long_comment else True
+        if long_comment:
             continue
-        # NOTE: with condition that situated under can be problems
-        if (find[0] in line[0]) and (find[1] not in line[1]):
+
+        if "//" in line or \
+            "'import'" in line or \
+            '"import"' in line or \
+                (find[0] in line[0]) and (find[1] not in line[1]) or \
+                ("'" == line[0]) and ("'" == line[-1]) or \
+                ('"' == line[0]) and ('"' == line[-1]) or \
+                any(map(lambda x: x == 2, (line.count("'''"), line.count('"""')))):
             continue
-        if ("'" == line[0]) and ("'" == line[-1]):
-            continue
-        if ('"' == line[0]) and ('"' == line[-1]):
-            continue
-        if (line.count("'''") == 2) or (line.count('"""') == 2):
-            continue
-        if (line.count("'''") == 1) or (line.count('"""') == 1):
-            if long_comment:
-                long_comment = False
-            elif not long_comment:
-                long_comment = True
-        if not long_comment and find in line:
+        if find in line:
             suits.append(line.replace("\n", ""))
     return suits
 

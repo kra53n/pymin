@@ -11,10 +11,10 @@ from sys import path as sys_path
 from sys import version as sys_version
 from os import listdir
 
-from constants import NAME_BUILTIN, NAME_LOCAL, NAME_OUTSIDE
+from constants import NAME_BUILTIN, NAME_LOCAL, NAME_OUTSIDE, PY_EXTENSION
 
 
-def slice_in_files_extension(files, extension=".py"):
+def slice_in_files_extension(files, extension=PY_EXTENSION):
     ext_len = len(extension)
     for i in range(len(files)):
         if files[i][-ext_len:] == extension:
@@ -29,7 +29,7 @@ def py_version(ver=sys_version):
     return ver[:ver.find(' ')]
 
 
-def path_to_builtin(lst=sys_path):
+def path_to_builtin():
     """
     From list in sys_path it parse path to Python
     where situated his Libs
@@ -74,7 +74,6 @@ def parse_local(pkgs, files):
     local = []
     # clean pkgs
     pkgs = [pkg.replace(".", "") if "." in pkg else pkg for pkg in pkgs]
-
     slice_in_files_extension(files)
     local.extend([file for file in files if file in pkgs])
     for pkg in local:
