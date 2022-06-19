@@ -76,7 +76,7 @@ def check_file(path: str, file: str, find_without_ext: bool = True):
     if file[-3:] == ".py":
         return 1
     if find_without_ext:
-        if "." not in file and find_string_in_file((path, "#!/bin/python")):
+        if "." not in file and find_string_in_file(path, "#!/bin/python"):
             return 1
 
 
